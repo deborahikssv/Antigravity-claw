@@ -114,16 +114,21 @@ fn resolve_collisions(elements: &mut Vec<PhysicsElement>) {
             let restitution = (a_rest + b_rest) / 2.0;
             let total_mass = a_mass + b_mass;
 
-            // Resolve along minimum penetration axis
+            // Resolve along minimum penetration axis using proper elastic collision physics
             if overlap_x < overlap_y {
                 // Horizontal collision
                 let rel_vx = a_vel.x - b_vel.x;
-                let impulse = (1.0 + restitution) * rel_vx * a_mass * b_mass / total_mass;
+                
+                // Only resolve if moving towards each other
+                if rel_vx > 0.0 {
+                    // Calculate impulse for 1D elastic collision with restitution
+                    let impulse = -(1.0 + restitution) * rel_vx / (1.0/a_mass + 1.0/b_mass);
+                    
+                    elements[i].velocity.x += impulse / a_mass;
+                    elements[j].velocity.x -= impulse / b_mass;
+                }
 
-                elements[i].velocity.x -= impulse / a_mass;
-                elements[j].velocity.x += impulse / b_mass;
-
-                // Separate
+                // Separate to prevent sticking
                 let sep = overlap_x / 2.0 + 0.5;
                 if a_pos.x < b_pos.x {
                     elements[i].position.x -= sep;
@@ -135,10 +140,15 @@ fn resolve_collisions(elements: &mut Vec<PhysicsElement>) {
             } else {
                 // Vertical collision
                 let rel_vy = a_vel.y - b_vel.y;
-                let impulse = (1.0 + restitution) * rel_vy * a_mass * b_mass / total_mass;
-
-                elements[i].velocity.y -= impulse / a_mass;
-                elements[j].velocity.y += impulse / b_mass;
+                
+                // Only resolve if moving towards each other
+                if rel_vy > 0.0 {
+                    // Calculate impulse for 1D elastic collision with restitution
+                    let impulse = -(1.0 + restitution) * rel_vy / (1.0/a_mass + 1.0/b_mass);
+                    
+                    elements[i].velocity.y += impulse / a_mass;
+                    elements[j].velocity.y -= impulse / b_mass;
+                }
 
                 let sep = overlap_y / 2.0 + 0.5;
                 if a_pos.y < b_pos.y {
