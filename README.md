@@ -1,17 +1,45 @@
-# 🌍 Antigravity Claw
+<div align="center">
 
-**Make any webpage defy gravity — powered by a real Rust physics engine.**
+<br />
 
-Fetches any URL, extracts DOM elements, runs a 2D physics simulation with Verlet integration and AABB collision detection, and renders an interactive HTML animation you can open in any browser.
+```
+  ▄▀█ █▄░█ ▀█▀ █ █▀▀ █▀█ ▄▀█ █░█ █ ▀█▀ █▄█
+  █▀█ █░▀█ ░█░ █ █▄█ █▀▄ █▀█ ▀▄▀ █ ░█░ ░█░
+  ░░░░ █▀▀ █░░ ▄▀█ █░█ ░░░░
+  ░░░░ █▄▄ █▄▄ █▀█ ▀▄▀ ░░░░
+```
 
-Inspired by three things called "Antigravity":
-- 🔍 **Google Gravity** — the viral Chrome easter egg by Ricardo Cabello (Mr.doob)
-- 🐍 **`import antigravity`** — Python's stdlib easter egg referencing [XKCD #353](https://xkcd.com/353/), first added to Google App Engine in 2008
-- 💻 **Google Antigravity IDE** — the 2025 AI-first coding platform
+**An OpenClaw skill that defies gravity — and expectations.**
+
+[![CI](https://github.com/deborahikssv/Antigravity-claw/actions/workflows/ci.yml/badge.svg)](https://github.com/deborahikssv/Antigravity-claw/actions)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Python 3.9+](https://img.shields.io/badge/python-3.9%2B-brightgreen)](https://python.org)
+[![OpenClaw Skill](https://img.shields.io/badge/openclaw-skill-purple)](https://github.com/deborahikssv/Antigravity-claw)
+
+<br />
+
+*Inspired by [antigravity.google](https://antigravity.google/) — the one page that proved even gravity has a sense of humor.*
+
+</div>
 
 ---
 
-## ⚡ Install on macOS — one command
+## What is antigravity-claw?
+
+`antigravity-claw` is an **OpenClaw skill** that brings antigravity physics to your AI assistant.
+
+Give your AI the ability to:
+- 🧮 **Compute lift force** — real physics, inverted sign
+- 🚀 **Simulate levitation trajectories** — smooth-step curves, velocity graphs, escape velocity
+- 🪐 **Generate antigravity poetry** — because science needs a soul
+
+One skill server. Three tools. Zero gravity.
+
+---
+
+## Install in one command
+
+**macOS / Linux:**
 
 ```bash
 curl -fsSLk https://github.com/deborahikssv/Antigravity-claw/archive/refs/heads/main.zip -o /tmp/cw.zip && \
@@ -20,167 +48,241 @@ cd /tmp/Antigravity-claw-main && \
 bash install.sh
 ```
 
-The installer will:
-- Install **Rust** (via rustup) if not present
-- Install **uv** (Python package manager) if not present
-- Compile the physics engine (`~60s first run`)
-- Install Python deps
-- Add `antigravity-claw` to your PATH
-
----
-
-## Quick start
+**Already have the zip?**
 
 ```bash
-# Classic Google Gravity — opens in browser instantly
-antigravity-claw google
-
-# Apply gravity to any URL
-antigravity-claw drop https://news.ycombinator.com
-
-# Chaos mode
-antigravity-claw drop https://github.com --mode chaos
-
-# Reverse gravity
-antigravity-claw drop https://wikipedia.org --mode up
-
-# Zero gravity (weightlessness)
-antigravity-claw drop --mode zero
-
-# Live terminal animation
-antigravity-claw watch --demo
-
-# The classic Python easter egg in your terminal
-antigravity-claw fly
-
-# List all modes
-antigravity-claw modes
+unzip Antigravity-claw-main.zip
+cd Antigravity-claw-main
+bash install.sh
 ```
 
----
-
-## Gravity modes
-
-| Mode | Effect | Description |
-|---|---|---|
-| `down` | ↓ | Classic Google Gravity — everything falls to the floor |
-| `up` | ↑ | Reverse gravity — elements float upward |
-| `left` | ← | Elements slide off the left wall |
-| `right` | → | Elements slide off the right wall |
-| `zero` | ○ | Weightlessness — gentle drift with no floor |
-| `chaos` | 🌀 | Rotating + pulsing gravity. Maximum entropy. |
+That's it. The installer will:
+1. Verify your Python 3.9+ environment
+2. Copy the skill to `~/.openclaw/skills/antigravity-claw/`
+3. Create a launcher binary at `~/.local/bin/antigravity-claw`
+4. Register the skill in your OpenClaw config
+5. Run a live smoke test to confirm everything works
 
 ---
 
-## All commands
+## Start the server
 
-```
-antigravity-claw drop [URL] [OPTIONS]
-
-  URL                   Page to apply gravity to (default: google.com)
-  --mode, -m TEXT       Gravity direction (default: down)
-  --duration, -d FLOAT  Simulation length in seconds (default: 5.0)
-  --output, -o PATH     Output HTML file
-  --fps INT             Frames per second (default: 60)
-  --demo                Use built-in Google mock (no fetch needed)
-  --no-open             Don't auto-open browser
-
-antigravity-claw google [--mode down|chaos|up...]
-antigravity-claw fly
-antigravity-claw watch [URL] [--mode MODE] [--demo]
-antigravity-claw export [URL] --output frames.json
-antigravity-claw modes
-antigravity-claw info
-```
-
----
-
-## Architecture
-
-```
-Antigravity-claw/
-│
-├── src/                    ← Rust physics engine
-│   ├── main.rs             ← CLI (clap) — drop / fly / watch / export
-│   ├── physics.rs          ← Verlet integration, AABB collision, gravity modes
-│   ├── scraper.rs          ← HTTP fetch + heuristic DOM layout extraction
-│   ├── renderer.rs         ← Terminal renderer + HTML animation generator
-│   ├── types.rs            ← PhysicsElement, PhysicsWorld, SimFrame, GravityMode
-│   └── lib.rs              ← Crate root
-│
-├── py/                     ← Python orchestration layer
-│   ├── antigravity.py      ← Typer CLI + Rust engine bridge + browser open
-│   ├── scraper_py.py       ← BeautifulSoup HTML scraper (alternative to Rust)
-│   └── openclaw_skill.py   ← OpenClaw agent skill integration
-│
-├── SKILL.md                ← OpenClaw skill manifest
-├── install.sh              ← macOS one-command installer
-├── Cargo.toml              ← Rust dependencies
-└── pyproject.toml          ← Python dependencies
-```
-
----
-
-## Physics engine details
-
-The Rust engine implements:
-
-- **Verlet integration** — stable, energy-conserving position update
-- **AABB collision detection** — axis-aligned bounding box pairwise collisions
-- **Coefficient of restitution** — configurable bounciness per element
-- **Friction simulation** — horizontal velocity damping on ground contact
-- **Angular velocity** — elements spin on impact
-- **Air resistance** — tiny drag factor prevents infinite acceleration
-- **Chaos mode** — sinusoidal rotating gravity + random impulse pulses
-
-Element mass is proportional to bounding box area. Gravity is 980 px/s² (scaled to match real 9.8 m/s² visually).
-
----
-
-## The three Antigravities
-
-### Google Gravity (2009)
-A Chrome Experiment by Ricardo Cabello that made google.com's HTML elements fall under gravity using JavaScript. Accessible today at [elgoog.im/gravity](https://elgoog.im/gravity/).
-
-### `import antigravity` (2008)
-Added to Google App Engine as a launch easter egg on April 7, 2008. References [XKCD #353](https://xkcd.com/353/) where a character discovers they can fly by importing the module. Later added to Python 3 stdlib. Contains a hidden easter egg inside the easter egg: an implementation of [XKCD's geohashing algorithm](https://xkcd.com/426/).
-
-### Google Antigravity IDE (2025)
-An AI-first "agentic" IDE built on VS Code + Gemini 3. The name references both the Google Gravity easter egg and the `import antigravity` Python module — the idea that AI removes the "gravity" weighing down developers.
-
----
-
-## Troubleshooting
-
-### "antigravity-claw: command not found"
 ```bash
-source ~/.zshrc  # or ~/.bash_profile
-# or run directly:
-uv run python py/antigravity.py drop
+antigravity-claw
 ```
 
-### Rust build fails
-```bash
-rustup update stable
-cargo clean && cargo build --release
+```
+  ╔══════════════════════════════════════════╗
+  ║   🚀  antigravity-claw  •  v1.0.0        ║
+  ║   Listening on http://localhost:4242      ║
+  ╚══════════════════════════════════════════╝
 ```
 
-### Page not fetching
-Some URLs block scrapers. Use `--demo` to use the built-in Google layout:
+Custom port:
+
 ```bash
-antigravity-claw drop --demo --mode chaos
+ANTIGRAVITY_PORT=9000 antigravity-claw
 ```
+
+---
+
+## Tools
+
+Once the skill is running, your OpenClaw agent gets access to three tools:
+
+### `compute_antigravity`
+
+Calculate the lift force required to counteract gravity at a given altitude.
+
+```json
+POST /compute_antigravity
+{
+  "parameters": {
+    "mass_kg": 70,
+    "altitude_m": 10000,
+    "invert": true
+  }
+}
+```
+
+```json
+{
+  "mass_kg": 70,
+  "altitude_m": 10000,
+  "force_newtons": -686.5647,
+  "energy_joules": 6865647.0,
+  "inverted": true,
+  "escape_velocity_ms": 442.9447
+}
+```
+
+---
+
+### `levitate`
+
+Simulate a smooth levitation trajectory from ground to target altitude — with velocity at each step.
+
+```json
+POST /levitate
+{
+  "parameters": {
+    "object_name": "espresso machine",
+    "mass_kg": 8.5,
+    "target_altitude_m": 100
+  }
+}
+```
+
+```json
+{
+  "object": "espresso machine",
+  "target_altitude_m": 100,
+  "trajectory": [
+    { "t": 0.0, "altitude_m": 0.0,   "velocity_ms": 0.0   },
+    { "t": 0.1, "altitude_m": 2.8,   "velocity_ms": 54.0  },
+    ...
+    { "t": 1.0, "altitude_m": 100.0, "velocity_ms": 0.0   }
+  ],
+  "physics": { ... },
+  "status": "levitating 🚀"
+}
+```
+
+---
+
+### `antigravity_poem`
+
+Returns a random micro-poem. Because why not.
+
+```json
+POST /antigravity_poem
+{}
+```
+
+```json
+{
+  "poem": "Gravity is just / a suggestion / we politely declined."
+}
+```
+
+---
+
+## JavaScript SDK
+
+Use the built-in client in your own scripts or web apps:
+
+```js
+import { AntigravityClawClient } from "./src/client.js";
+
+const ag = new AntigravityClawClient(); // default: http://localhost:4242
+
+// Physics
+const force = await ag.computeAntigravity(10, 500);
+console.log(force.force_newtons); // -98.1...
+
+// Trajectory
+const flight = await ag.levitate("rubber duck", 0.05, 200);
+console.log(flight.trajectory);
+
+// Poetry
+const { poem } = await ag.poem();
+console.log(poem);
+```
+
+The client works in both **Node.js** and the **browser** (no bundler required).
+
+---
+
+## Manifest & health endpoints
+
+| Endpoint       | Method | Description                          |
+|----------------|--------|--------------------------------------|
+| `/`            | GET    | OpenClaw skill manifest (JSON)       |
+| `/manifest`    | GET    | Same as above                        |
+| `/health`      | GET    | `{"status":"ok","version":"1.0.0"}`  |
+
+---
+
+## Run tests
+
+**Python unit tests** (no server needed):
+
+```bash
+python -m pytest tests/test_server.py -v
+```
+
+**JavaScript integration tests** (server must be running):
+
+```bash
+node tests/test_client.mjs
+```
+
+---
+
+## Project structure
+
+```
+antigravity-claw/
+├── src/
+│   ├── server.py       # Python skill server (stdlib only, no deps)
+│   └── client.js       # JavaScript client SDK (ESM + CJS)
+├── tests/
+│   ├── test_server.py  # Python unit tests (pytest)
+│   └── test_client.mjs # JS integration tests
+├── .github/
+│   └── workflows/
+│       └── ci.yml      # GitHub Actions CI
+├── install.sh          # One-command installer
+├── package.json
+├── LICENSE
+└── README.md
+```
+
+---
+
+## Requirements
+
+| Runtime    | Version |
+|------------|---------|
+| Python     | 3.9+    |
+| Node.js    | 18+ (optional, for JS client / tests) |
+| macOS / Linux | ✅ |
+| Windows    | WSL2 recommended |
+
+Zero external Python dependencies. The server runs on Python's standard library alone.
+
+---
+
+## Configuration
+
+| Environment variable   | Default | Description                  |
+|------------------------|---------|------------------------------|
+| `ANTIGRAVITY_PORT`     | `4242`  | HTTP port for the skill server |
+
+---
+
+## Contributing
+
+Pull requests are welcome. To add a new tool:
+
+1. Add the function in `src/server.py`
+2. Register it in `SKILL_MANIFEST["tools"]`
+3. Add a route in `SkillHandler.do_POST`
+4. Add a method in `src/client.js`
+5. Write tests in `tests/`
 
 ---
 
 ## License
 
-MIT
+[MIT](LICENSE) © antigravity-claw contributors
 
-## Credits
+---
 
-- **Ricardo Cabello (Mr.doob)** — original Google Gravity Chrome Experiment
-- **Guido van Rossum / Skip Montanaro** — `import antigravity` Python module
-- **Randall Munroe** — XKCD #353
-- **Google App Engine team** — first `antigravity` deployment (2008)
-- **OpenClaw** — agent skill framework
+<div align="center">
+
+*"What goes up / need not come down / when you rewire the rules."*
+
+⭐ Star this repo if it made you smile — or levitate.
+
+</div>
